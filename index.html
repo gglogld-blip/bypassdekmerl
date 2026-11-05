@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="km">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DekMerl - ដេកមើល | ពិភពវីដេអូរឿង AI (Unlocked)</title>
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="https://i.postimg.cc/1zgrxqrp/1000061376-removebg-preview.png">
+    <!-- Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Kantumruy Pro', sans-serif; }
+        body { background-color: #121212; color: #ffffff; min-height: 100vh; padding-bottom: 40px; position: relative; overflow-x: hidden; }
+        
+        header { position: sticky; top: 0; z-index: 50; background-color: rgba(18, 18, 18, 0.95); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-bottom: 1px solid #2a2a2a; padding: 12px 16px; }
+        .header-container { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+        .logo-box { display: flex; align-items: center; gap: 10px; cursor: pointer; }
+        .logo-img { width: 38px; height: 38px; object-fit: contain; border-radius: 8px; }
+        .brand-title { font-size: 1.1rem; font-weight: 700; color: #E50914; }
+        .brand-title span { color: #ffffff; }
+
+        .banner-section { max-width: 1200px; margin: 16px auto 0; padding: 0 16px; }
+        .carousel-container { position: relative; width: 100%; height: 200px; border-radius: 16px; overflow: hidden; background-color: #000; box-shadow: 0 8px 24px rgba(0,0,0,0.5); transform: translateZ(0); }
+        @media (min-width: 768px) { .carousel-container { height: 380px; } }
+        .carousel-track { display: flex; width: 100%; height: 100%; transition: transform 0.6s ease-in-out; will-change: transform; }
+        .slide { min-width: 100%; height: 100%; background-color: #000; display: flex; align-items: center; justify-content: center; }
+        .slide img { width: 100%; height: 100%; object-fit: cover; }
+
+        /* Category Filter Pills */
+        .category-filter { max-width: 1200px; margin: 16px auto 0; padding: 0 16px; display: flex; gap: 8px; overflow-x: auto; padding-bottom: 6px; }
+        .category-filter::-webkit-scrollbar { height: 4px; }
+        .category-filter::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
+        .cat-pill { background-color: #1e1e1e; border: 1px solid #333; color: #aaa; padding: 6px 14px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; cursor: pointer; white-space: nowrap; transition: background-color 0.2s, color 0.2s; }
+        .cat-pill.active-cat { background-color: #E50914; color: #fff; border-color: #E50914; }
+
+        .main-content { max-width: 1200px; margin: 24px auto 0; padding: 0 16px; }
+        .section-header { font-size: 1.1rem; font-weight: 700; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; }
+        
+        .search-box-wrap { margin-bottom: 16px; position: relative; }
+        .search-input { width: 100%; background-color: #1e1e1e; border: 1px solid #333; border-radius: 12px; padding: 12px 16px 12px 42px; color: #fff; font-size: 0.85rem; outline: none; transition: border-color 0.2s; }
+        .search-input:focus { border-color: #E50914; }
+        .search-icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: #888; font-size: 0.9rem; }
+
+        .search-suggestions-dropdown { position: absolute; top: calc(100% + 6px); left: 0; right: 0; background-color: #181818; border: 1px solid #333; border-radius: 12px; max-height: 280px; overflow-y: auto; z-index: 40; box-shadow: 0 8px 24px rgba(0,0,0,0.6); }
+        .suggestion-item { display: flex; align-items: center; gap: 10px; padding: 8px 12px; cursor: pointer; border-bottom: 1px solid #222; transition: background 0.2s; }
+        .suggestion-item:last-child { border-bottom: none; }
+        .suggestion-item:hover { background-color: #252525; }
+        .suggestion-thumb { width: 45px; height: 26px; object-fit: cover; border-radius: 4px; background-color: #000; }
+        .suggestion-text { font-size: 0.8rem; font-weight: 600; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+        .video-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+        @media (min-width: 600px) { .video-grid { grid-template-columns: repeat(3, 1fr); gap: 14px; } }
+        @media (min-width: 900px) { .video-grid { grid-template-columns: repeat(4, 1fr); gap: 16px; } }
+        @media (min-width: 1200px) { .video-grid { grid-template-columns: repeat(5, 1fr); gap: 16px; } }
+
+        .video-card { background-color: #1e1e1e; border: 1px solid #2a2a2a; border-radius: 10px; overflow: hidden; position: relative; display: flex; flex-direction: column; }
+        .thumbnail-box { position: relative; width: 100%; aspect-ratio: 16/9; background-color: #2a2a2a; cursor: pointer; }
+        .thumbnail-box img { width: 100%; height: 100%; object-fit: cover; }
+        
+        .badge-access { position: absolute; top: 4px; left: 4px; padding: 3px 6px; border-radius: 4px; font-size: 0.6rem; font-weight: 700; }
+        .badge-free { background-color: #E50914; color: #fff; }
+        .badge-hot { position: absolute; top: 4px; right: 4px; background-color: #ea580c; color: #fff; padding: 3px 6px; border-radius: 4px; font-size: 0.6rem; font-weight: 700; }
+
+        .video-details { padding: 8px 10px; flex: 1; display: flex; flex-direction: column; justify-content: space-between; }
+        .series-name { font-size: 0.78rem; font-weight: 700; color: #ffffff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .series-info { font-size: 0.65rem; color: #aaa; margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+        .series-modal-overlay { position: fixed; inset: 0; background-color: #121212; z-index: 999; display: flex; flex-direction: column; width: 100vw; height: 100vh; height: 100dvh; overflow-y: auto; }
+        .series-modal-header { display: flex; align-items: center; justify-content: space-between; padding: 12px 20px; background-color: #181818; border-bottom: 1px solid #2a2a2a; position: sticky; top: 0; z-index: 30; }
+        .btn-back-series { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: #ffffff; width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; cursor: pointer; transition: background 0.2s; }
+
+        .series-modal-body-wrapper { display: flex; flex-direction: column; width: 100%; max-width: 1400px; margin: 0 auto; flex: 1; }
+        @media (min-width: 1024px) {
+            .series-modal-body-wrapper { display: grid; grid-template-columns: 1fr 380px; gap: 20px; padding: 20px; align-items: start; }
+        }
+
+        .player-and-info-section { display: flex; flex-direction: column; width: 100%; }
+        .series-player-container { width: 100%; aspect-ratio: 16/9; background-color: #000000; position: relative; border-radius: 0; }
+        @media (min-width: 1024px) {
+            .series-player-container { border-radius: 12px; overflow: hidden; box-shadow: 0 8px 30px rgba(0,0,0,0.7); }
+        }
+        .series-player-container iframe { width: 100%; height: 100%; border: none; }
+
+        .series-info-box { padding: 14px 16px; border-bottom: 1px solid #2a2a2a; background-color: #161616; }
+        @media (min-width: 1024px) { .series-info-box { border-bottom: none; background: transparent; padding: 14px 0; } }
+
+        .series-episodes-area { padding: 16px; flex: 1; background-color: #121212; }
+        @media (min-width: 1024px) {
+            .series-episodes-area { background-color: #181818; border: 1px solid #2a2a2a; border-radius: 12px; max-height: calc(100vh - 100px); overflow-y: auto; }
+        }
+
+        .episode-grid-thumbnails { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 10px; }
+        @media (min-width: 600px) and (max-width: 1023px) { .episode-grid-thumbnails { grid-template-columns: repeat(3, 1fr); } }
+        @media (min-width: 1024px) { .episode-grid-thumbnails { grid-template-columns: 1fr; } }
+
+        .episode-thumb-card { background-color: #1e1e1e; border: 1px solid #333; border-radius: 8px; overflow: hidden; cursor: pointer; transition: border-color 0.2s; display: flex; flex-direction: column; position: relative; }
+        @media (min-width: 1024px) { .episode-thumb-card { flex-direction: row; align-items: center; gap: 10px; padding: 6px; } }
+        .episode-thumb-card:hover { border-color: #E50914; }
+        .episode-thumb-card.active-ep { border-color: #E50914; background-color: rgba(229, 9, 20, 0.1); }
+
+        .ep-thumb-img-box { position: relative; width: 100%; aspect-ratio: 16/9; background-color: #000; }
+        @media (min-width: 1024px) { .ep-thumb-img-box { width: 110px; height: 62px; flex-shrink: 0; border-radius: 6px; overflow: hidden; } }
+        .ep-thumb-img-box img { width: 100%; height: 100%; object-fit: cover; }
+        .ep-thumb-badge { position: absolute; top: 4px; left: 4px; background: rgba(0,0,0,0.7); color: #4ade80; font-size: 0.6rem; padding: 2px 6px; border-radius: 4px; font-weight: 700; }
+
+        .ep-thumb-title { padding: 6px 8px; font-size: 0.75rem; font-weight: 600; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        @media (min-width: 1024px) { .ep-thumb-title { padding: 0; flex: 1; } }
+
+        .telegram-float-btn { position: fixed; bottom: 24px; right: 24px; background: linear-gradient(135deg, #229ED9, #0088cc); color: #ffffff; width: 58px; height: 58px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; box-shadow: 0 8px 25px rgba(34, 158, 217, 0.6); z-index: 90; text-decoration: none; transition: transform 0.2s ease; }
+        .telegram-float-btn:hover { transform: scale(1.08); }
+
+        .hidden { display: none !important; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-container">
+            <div class="logo-box">
+                <img src="https://i.postimg.cc/1zgrxqrp/1000061376-removebg-preview.png" alt="Logo" class="logo-img">
+                <div class="brand-title">DekMerl-<span>ដេកមើល (Free All)</span></div>
+            </div>
+        </div>
+    </header>
+
+    <section class="banner-section">
+        <div class="carousel-container">
+            <div id="carouselSlides" class="carousel-track"></div>
+        </div>
+    </section>
+
+    <!-- Category Filter Pills -->
+    <div class="category-filter">
+        <button onclick="filterCategory('all')" id="cat_all" class="cat-pill active-cat">✨ ទាំងអស់</button>
+        <button onclick="filterCategory('រឿងឥតគិតថ្លៃ')" id="cat_រឿងឥតគិតថ្លៃ" class="cat-pill">🎁 រឿងឥតគិតថ្លៃ</button>
+        <button onclick="filterCategory('រឿងភាគ')" id="cat_រឿងភាគ" class="cat-pill">🎬 រឿងភាគ</button>
+        <button onclick="filterCategory('រឿងពេញ')" id="cat_រឿងពេញ" class="cat-pill">🍿 រឿងពេញ</button>
+        <button onclick="filterCategory('ស្នេហា')" id="cat_ស្នេហា" class="cat-pill">❤️ ស្នេហា</button>
+        <button onclick="filterCategory('ប្រយុទ្ធ')" id="cat_ប្រយុទ្ធ" class="cat-pill">⚔️ ប្រយុទ្ធ</button>
+        <button onclick="filterCategory('កំប្លែង')" id="cat_កំប្លែង" class="cat-pill">😂 កំប្លែង</button>
+        <button onclick="filterCategory('យុទ្ធសាស្ត្រ')" id="cat_យុទ្ធសាស្ត្រ" class="cat-pill">⚔️ យុទ្ធសាស្ត្រ</button>
+        <button onclick="filterCategory('អ្នកប្រាជ្ញ')" id="cat_អ្នកប្រាជ្ញ" class="cat-pill">🧠 អ្នកប្រាជ្ញ</button>
+        <button onclick="filterCategory('តួស្រី')" id="cat_តួស្រី" class="cat-pill">💃 តួស្រី</button>
+    </div>
+
+    <main class="main-content">
+        <div class="section-header">
+            <div>
+                <i class="fa-solid fa-film" style="color: #E50914;"></i>
+                <span>រឿងពេញនិយម (ដោះសោគ្រប់ភាគ)</span>
+            </div>
+        </div>
+        
+        <div class="search-box-wrap">
+            <i class="fa-solid fa-magnifying-glass search-icon"></i>
+            <input type="text" id="searchInput" oninput="handleSearchInput()" placeholder="ស្វែងរកឈ្មោះរឿង..." class="search-input" autocomplete="off">
+            <div id="searchSuggestionsDropdown" class="search-suggestions-dropdown hidden"></div>
+        </div>
+
+        <div id="videoGrid" class="video-grid"></div>
+    </main>
+
+    <a href="https://t.me/Dekmerl" target="_blank" class="telegram-float-btn" title="Join Telegram Channel">
+        <i class="fa-brands fa-telegram"></i>
+    </a>
+
+    <!-- Series Player Modal -->
+    <div id="seriesModal" class="series-modal-overlay hidden">
+        <div class="series-modal-header">
+            <button onclick="closeSeriesModal()" class="btn-back-series">
+                <i class="fa-solid fa-chevron-left"></i>
+            </button>
+            <div style="text-align: right;">
+                <h3 id="seriesModalTitleTop" style="font-size: 0.9rem; font-weight: 700; color: #fff;"></h3>
+                <p id="seriesModalCategoryTop" style="font-size: 0.65rem; color: #E50914; font-weight: 600;"></p>
+            </div>
+        </div>
+
+        <div class="series-modal-body-wrapper">
+            <div class="player-and-info-section">
+                <div class="series-player-container">
+                    <iframe id="seriesPlayerFrame" src="" allowfullscreen="" controlslist="nodownload" sandbox="allow-scripts allow-same-origin allow-presentation"></iframe>
+                </div>
+
+                <div class="series-info-box">
+                    <h2 id="seriesModalTitle" style="font-size: 1.1rem; font-weight: 700; color: #fff;"></h2>
+                    <p id="seriesModalCategory" style="font-size: 0.75rem; color: #aaa; margin-top: 4px;"></p>
+                </div>
+            </div>
+
+            <div class="series-episodes-area">
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;">
+                    <h4 style="font-size: 0.9rem; color: #bbb; font-weight: bold;">🎬 ជ្រើសរើសភាគទស្សនា (ឥតគិតថ្លៃគ្រប់ភាគ)៖</h4>
+                </div>
+                <div id="episodeListContainer" class="episode-grid-thumbnails"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script Logic -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBoPW-X64pI39xkOIwrKJqp-CFSRUSMSCI",
+            authDomain: "dekmerl-a5e6b.firebaseapp.com",
+            databaseURL: "https://dekmerl-a5e6b-default-rtdb.firebaseio.com",
+            projectId: "dekmerl-a5e6b",
+            storageBucket: "dekmerl-a5e6b.firebasestorage.app",
+            messagingSenderId: "70847371433",
+            appId: "1:70847371433:web:eefa5c66e8baa3856f31b8"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+
+        window.videos = [];
+        window.currentCategory = 'all';
+        window.bannerImages = [
+            "https://cdn.phototourl.com/member/2026-11-04-fccc016f-f36b-460c-ba26-308ced47ba98.jpg",
+            "https://cdn.phototourl.com/member/2026-10-29-4a22ea06-9fbe-45ee-8455-5f9d2793f6da.jpg",
+            "https://cdn.phototourl.com/member/2026-11-01-2bf35fa4-0043-422d-9512-4deb71800f4e.jpg"
+        ];
+
+        function renderBanners() {
+            const track = document.getElementById('carouselSlides');
+            if (!track) return;
+            track.innerHTML = window.bannerImages.map(imgUrl => `
+                <div class="slide"><img src="${imgUrl}" alt="Banner" loading="lazy"></div>
+            `).join('');
+        }
+
+        function listenToBanners() {
+            const bannerRef = ref(db, 'banners');
+            onValue(bannerRef, (snapshot) => {
+                const data = snapshot.val();
+                if (data && Array.isArray(data)) {
+                    window.bannerImages = data;
+                    renderBanners();
+                }
+            });
+        }
+
+        function listenToVideos() {
+            const videosRef = ref(db, 'videos');
+            onValue(videosRef, (snapshot) => {
+                window.videos = [];
+                const data = snapshot.val();
+                if (data) {
+                    Object.keys(data).forEach((key) => {
+                        window.videos.push({ id: key, ...data[key] });
+                    });
+                }
+                renderVideos();
+            });
+        }
+
+        window.filterCategory = function(cat) {
+            window.currentCategory = cat;
+            document.querySelectorAll('.cat-pill').forEach(btn => btn.classList.remove('active-cat'));
+            document.getElementById(`cat_${cat}`).classList.add('active-cat');
+            renderVideos();
+        }
+
+        function renderVideos() {
+            const grid = document.getElementById('videoGrid');
+            if (!grid) return;
+
+            let filtered = window.videos;
+            if (window.currentCategory !== 'all') {
+                filtered = filtered.filter(v => v.category === window.currentCategory);
+            }
+
+            const seriesMap = {};
+            filtered.forEach(v => {
+                if (!seriesMap[v.series]) {
+                    seriesMap[v.series] = {
+                        series: v.series,
+                        imageUrl: v.imageUrl,
+                        type: v.type || 'រឿងភាគ',
+                        category: v.category || 'ស្នេហា',
+                        isHot: v.isHot || false,
+                        createdAt: v.createdAt || 0,
+                        episodes: []
+                    };
+                }
+                if (v.isHot) seriesMap[v.series].isHot = true;
+                if ((v.createdAt || 0) > seriesMap[v.series].createdAt) {
+                    seriesMap[v.series].createdAt = v.createdAt;
+                }
+                seriesMap[v.series].episodes.push(v);
+            });
+
+            let seriesList = Object.values(seriesMap);
+            let hotSeries = seriesList.filter(s => s.isHot).sort((a, b) => b.createdAt - a.createdAt);
+            let normalSeries = seriesList.filter(s => !s.isHot).sort((a, b) => b.createdAt - a.createdAt);
+            seriesList = [...hotSeries, ...normalSeries];
+
+            if (seriesList.length === 0) {
+                grid.innerHTML = `<p style="color: #666; grid-column: 1/-1; text-align: center; padding: 30px 0; font-size: 0.85rem;">គ្មានវីដេអូរឿងទេ</p>`;
+                return;
+            }
+
+            grid.innerHTML = seriesList.map((s) => `
+                <div class="video-card">
+                    <div class="thumbnail-box" onclick="openSeriesModal('${s.series.replace(/'/g, "\\'")}')">
+                        <img src="${s.imageUrl}" alt="Thumbnail" loading="lazy">
+                        <span class="badge-access badge-free">ឥតគិតថ្លៃ</span>
+                        ${s.isHot ? '<span class="badge-hot">🔥 HOT</span>' : ''}
+                    </div>
+                    <div class="video-details" onclick="openSeriesModal('${s.series.replace(/'/g, "\\'")}')" style="cursor: pointer;">
+                        <div class="series-name">${s.series}</div>
+                        <div class="series-info">${s.type || 'រឿងភាគ'} | ${s.episodes.length} ភាគ</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        window.handleSearchInput = function() {
+            const input = document.getElementById('searchInput');
+            const dropdown = document.getElementById('searchSuggestionsDropdown');
+            if (!input || !dropdown) return;
+
+            const query = input.value.toLowerCase().trim();
+            if (query === '') {
+                dropdown.classList.add('hidden');
+                dropdown.innerHTML = '';
+                return;
+            }
+
+            const seriesMap = {};
+            window.videos.forEach(v => {
+                if (!seriesMap[v.series]) {
+                    seriesMap[v.series] = { series: v.series, imageUrl: v.imageUrl };
+                }
+            });
+
+            const matched = Object.values(seriesMap).filter(s => s.series.toLowerCase().includes(query));
+
+            if (matched.length === 0) {
+                dropdown.innerHTML = `<div style="padding: 10px; font-size: 0.75rem; color: #888; text-align: center;">រកមិនឃើញរឿងដែលត្រូវគ្នា</div>`;
+                dropdown.classList.remove('hidden');
+                return;
+            }
+
+            dropdown.innerHTML = matched.map(s => `
+                <div class="suggestion-item" onclick="selectSuggestion('${s.series.replace(/'/g, "\\'")}')">
+                    <img src="${s.imageUrl}" class="suggestion-thumb" alt="Thumb" loading="lazy">
+                    <span class="suggestion-text">${s.series}</span>
+                </div>
+            `).join('');
+
+            dropdown.classList.remove('hidden');
+        }
+
+        window.selectSuggestion = function(seriesName) {
+            document.getElementById('searchInput').value = "";
+            document.getElementById('searchSuggestionsDropdown').classList.add('hidden');
+            openSeriesModal(seriesName);
+        }
+
+        window.openSeriesModal = function(seriesName, resetPlay = true) {
+            const sEpisodes = window.videos.filter(v => v.series === seriesName);
+            if (sEpisodes.length === 0) return;
+
+            sEpisodes.sort((a, b) => {
+                const numA = parseInt(a.ep.replace(/[^0-9]/g, '')) || 0;
+                const numB = parseInt(b.ep.replace(/[^0-9]/g, '')) || 0;
+                if (numA !== numB) return numA - numB;
+                return (a.createdAt || 0) - (b.createdAt || 0);
+            });
+
+            const firstEp = sEpisodes[0];
+            document.getElementById('seriesModalTitleTop').innerText = seriesName;
+            document.getElementById('seriesModalCategoryTop').innerText = `${firstEp.type || 'រឿងភាគ'} | ${firstEp.category || 'ស្នេហា'}`;
+            document.getElementById('seriesModalTitle').innerText = seriesName;
+            document.getElementById('seriesModalCategory').innerText = `ប្រភេទ: ${firstEp.type || 'រឿងភាគ'} (${firstEp.category || 'ស្នេហា'})`;
+
+            const epContainer = document.getElementById('episodeListContainer');
+            epContainer.innerHTML = sEpisodes.map((ep) => `
+                <div id="ep_card_${ep.id}" class="episode-thumb-card" onclick="playEpisode('${ep.id}')">
+                    <div class="ep-thumb-img-box">
+                        <img src="${ep.imageUrl}" alt="Ep Thumbnail" loading="lazy">
+                        <span class="ep-thumb-badge">▶ ឥតគិតថ្លៃ</span>
+                    </div>
+                    <div class="ep-thumb-title" style="flex: 1;">${ep.ep}</div>
+                </div>
+            `).join('');
+
+            if (resetPlay) {
+                playEpisode(sEpisodes[0].id);
+            }
+            document.getElementById('seriesModal').classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        window.closeSeriesModal = function() {
+            document.getElementById('seriesModal').classList.add('hidden');
+            document.getElementById('seriesPlayerFrame').src = "";
+            document.body.style.overflow = '';
+        }
+
+        // ដោះសោរគ្រប់ភាគ និងបើកដំណើរការវីដេអូផ្ទាល់
+        window.playEpisode = function(id) {
+            const v = window.videos.find(item => item.id === id);
+            if (!v) return;
+
+            document.querySelectorAll('.episode-thumb-card').forEach(b => b.classList.remove('active-ep'));
+            const activeCard = document.getElementById(`ep_card_${id}`);
+            if (activeCard) activeCard.classList.add('active-ep');
+
+            const iframe = document.getElementById('seriesPlayerFrame');
+            iframe.style.display = "block";
+            iframe.src = v.videoUrl;
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            renderBanners();
+            listenToBanners();
+            listenToVideos();
+
+            const slides = document.getElementById('carouselSlides');
+            let currentSlide = 0;
+            if (slides) {
+                setInterval(() => {
+                    if (window.bannerImages.length > 0) {
+                        currentSlide = (currentSlide + 1) % window.bannerImages.length;
+                        slides.style.transform = `translateX(-${currentSlide * 100}%)`;
+                    }
+                }, 5000);
+            }
+        });
+    </script>
+</body>
+</html>
